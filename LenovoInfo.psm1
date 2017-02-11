@@ -5,8 +5,16 @@ Function Invoke-LenovoWarrantyRESTAPI {
 
     param
     (
-        $Serial,
-        $Product
+        #Specifies the Lenovo serial number
+        [Parameter(Mandatory = $true,
+        Position = 0 )]
+        [Alias('SN')]
+        [string]
+        $SerialNumber,
+
+        [Parameter(Mandatory = $false)]
+        [Alias('Model')]
+        $Product = ""
     )
 
     $url = "https://ibase.lenovo.com/POIRequest.aspx"
@@ -15,7 +23,9 @@ Function Invoke-LenovoWarrantyRESTAPI {
     $header = @{ "Content-Type" = "application/x-www-form-urlencoded" }
 
     $body = [xml]"<wiInputForm source='ibase'><id>LSC3</id><pw>IBA4LSC3</pw><product></product><serial></serial><wiOptions><machine/><parts/><service/><upma/><entitle/></wiOptions></wiInputForm>"
+    $body = "xml=<wiInputForm source='ibase'><id>LSC3</id><pw>IBA4LSC3</pw><product>$Product</product><serial>$SerialNumber</serial><wiOptions><machine/><parts/><service/><upma/><entitle/></wiOptions></wiInputForm>"
 
+    <#
     if (!([string]::IsNullOrEmpty($Product)))
     {
         #product parameter was provided
@@ -32,7 +42,12 @@ Function Invoke-LenovoWarrantyRESTAPI {
         $node.InnerText = $SerialNumber
     }
 
-    $response = Invoke-RestMethod -Method $verb -Uri $url -Body ("xml=$($body.InnerXml))") -Headers $header
+    write-host ("xml=$($body.InnerXml)")
+
+    $response = Invoke-RestMethod -Method $verb -Uri $url -Body ("xml=$($body.InnerXml)") -Headers $header
+    #>
+
+    $response = Invoke-RestMethod -Method $verb -Uri $url -Body $body -Headers $header
 
     return $response
 }
@@ -72,13 +87,17 @@ Function Get-LenovoWarrantyInfo {
         
     )
 
+    $RESTParams =@{}
+
     switch($PsCmdlet.ParameterSetName)
     {
         "BySerialNumber"
         {
-            #don't need anything extra because we already have serial number and possibly product code
+            $RESTParams.Add("SerialNumber", $SerialNumber)
+
+            if (!([string]::IsNullOrWhiteSpace($Product))) { $RESTParams.Add("Product", $Product) }
         }
-        }
+        
         "ByComputerName"
         {
             # need to use WMI to lookup serial number and model number of device
@@ -106,14 +125,12 @@ Function Get-LenovoWarrantyInfo {
             } 
             else 
             {
-
-                $SerialNumber = $result | Select-Object -ExpandProperty SerialNumber
+                $RESTParams.Add("SerialNumber", ($result | Select-Object -ExpandProperty SerialNumber ))
 
                 $args["Class"] = "Win32_ComputerSystem"
 
                 $result = Get-WmiObject @args
 
-                $Product = $result | Select-Object -ExpandProperty Model
 
                 $Manufacturer = $result | Select-Object -ExpandProperty Manufacturer
 
@@ -121,15 +138,15 @@ Function Get-LenovoWarrantyInfo {
                 {
                     Write-Warning "Possibly not a Lenovo device"
                 }
+                else
+                {
+                    $RESTParams.Add("Product", ($result | Select-Object -ExpandProperty Model ))
+                }
             }
         }
+    }
 
-    $args = @{}
-    $args.Add("Serial", $SerialNumber)
-
-    if ($null -ne $Product) { $args.Add("Product", $Product) }
-
-    $webresponse = Invoke-LenovoWarrantyRESTAPI @args
+    $webresponse = Invoke-LenovoWarrantyRESTAPI @RESTParams
 
     if ($null -eq $webresponse) 
     {
@@ -141,7 +158,7 @@ Function Get-LenovoWarrantyInfo {
 
         $properties = @{}
 
-        if ($webresponse.SelectSingleNode("serviceInfo")) {
+        if ($webresponse.SelectSingleNode("//serviceInfo")) {
 
             $properties.Add("ShipDate", $webresponse.wiOutputForm.warrantyInfo.serviceInfo.shipDate[0])
             $properties.Add("WarrantyStartDate", $webresponse.wiOutputForm.warrantyInfo.serviceInfo.warstart[0])
@@ -153,20 +170,24 @@ Function Get-LenovoWarrantyInfo {
         }
 
 
-        if ($webresponse.SelectSingleNode("machineInfo")) {
+        if ($webresponse.SelectSingleNode("//machineInfo")) {
 
             $properties.Add("Model", $webresponse.wiOutputForm.warrantyInfo.machineinfo.model)
             $properties.Add("Type", $webresponse.wiOutputForm.warrantyInfo.machineinfo.type)
             $properties.Add("Product", $webresponse.wiOutputForm.warrantyInfo.machineinfo.product)
             $properties.Add("SerialNumber", $webresponse.wiOutputForm.warrantyInfo.machineinfo.serial)
         }
+        
+        if ($webresponse.SelectSingleNode("//wiInputForm/xmlMessages")) 
+        {
 
-        $errorMessage = $webresponse.wiInputForm.xmlMessages.xmlMessage | Where-Object {$_.type -eq "error"}
+            $errorMessage = $webresponse.wiInputForm.xmlMessages.xmlMessage | Where-Object {$_.type -eq "error"}
 
-        if ( $errorMessage -ne $null  ) {
-            $properties.Add("ErrorNumber",($errorMessage.num))
-            $properties.Add("ErrorText", ($errorMessage.InnerText))
+            if ( $errorMessage -ne $null  ) {
+                $properties.Add("ErrorNumber",($errorMessage.num))
+                $properties.Add("ErrorText", ($errorMessage.InnerText))
 
+            }
         }
     }
 

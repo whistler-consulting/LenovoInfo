@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<ModuleObject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fVersion="1.1" type="Script" mclass="External" useSupports="false">
+  <Name>LenovoInfo</Name>
+  <Version>1.0</Version>
+  <Description>Used to retrieve warranty information on Lenovo devices</Description>
+  <ModulePath>C:\Users\mjenne\Documents\GitHub\LenovoInfo\LenovoInfo.psd1</ModulePath>
+  <HasManifest>false</HasManifest>
+  <OverridePostCount>false</OverridePostCount>
+  <FetchPostCount xsi:nil="true" />
+  <Cmdlets>
+    <CmdletObject verb="Get" noun="LenovoWarrantyInfo">
+      <Name>Get-LenovoWarrantyInfo</Name>
+      <Syntax>
+        <string>Get-LenovoWarrantyInfo [[-ComputerName] &lt;String&gt;] [-Credential &lt;Object&gt;]</string>
+        <string>Get-LenovoWarrantyInfo [-SerialNumber] &lt;String&gt; [[-Product] &lt;String&gt;] [-Credential &lt;Object&gt;]</string>
+      </Syntax>
+      <GeneralHelp>
+        <Synopsis>test synopsis</Synopsis>
+        <Description>detailed description</Description>
+        <Notes>notes</Notes>
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="ByComputerName" Params="ComputerName Credential Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="BySerialNumber" Params="SerialNumber Product Credential Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Parameters>
+        <ParameterDescription type="String" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="0" globbing="false" varLen="false">
+          <Name>ComputerName</Name>
+          <Description />
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Object" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false" varLen="false">
+          <Name>Credential</Name>
+          <Description />
+          <Attributes>
+            <string>System.Management.Automation.CredentialAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="0" globbing="false" varLen="false">
+          <Name>SerialNumber</Name>
+          <Description />
+          <Attributes>
+            <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>SN</string>
+          </Aliases>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="1" globbing="false" varLen="false">
+          <Name>Product</Name>
+          <Description />
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples />
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w10="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+  </Cmdlets>
+</ModuleObject>
