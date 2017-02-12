@@ -52,7 +52,7 @@ Function Invoke-LenovoWarrantyRESTAPI {
     return $response
 }
 
-
+# .ExternalHelp LenovoInfo.psm1-Help.xml
 Function Get-LenovoWarrantyInfo {
 [CmdletBinding(DefaultParameterSetName="ByComputerName")]
 
@@ -73,17 +73,21 @@ Function Get-LenovoWarrantyInfo {
         ValueFromPipeline = $true,
         Position = 1,
         ParameterSetName = "BySerialNumber")]
-        [string]$Product,
+        [string]
+        $Product,
 
         [Parameter(Mandatory = $false,
         ValueFromPipelineByPropertyName = $true,
         ValueFromPipeline = $true,
         Position = 0,
         ParameterSetName = "ByComputerName")]
-        [string]$ComputerName,
+        [string]
+        $ComputerName,
 
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.CredentialAttribute()]$Credential
+        [Parameter(Mandatory = $false,
+        ParameterSetName = "ByComputerName")]
+        [System.Management.Automation.CredentialAttribute()]
+        $Credential
         
     )
 

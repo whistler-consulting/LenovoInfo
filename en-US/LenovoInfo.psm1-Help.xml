@@ -4,7 +4,7 @@
 	<command:details>
 		<command:name>Get-LenovoWarrantyInfo</command:name>
 		<maml:description>
-			<maml:para>test synopsis</maml:para>
+			<maml:para>This cmdlet is designed to retrieve the warranty information for Lenovo devices.</maml:para>
 		</maml:description>
 		<maml:copyright>
 			<maml:para />
@@ -14,7 +14,9 @@
 		<dev:version />
 	</command:details>
 	<maml:description>
-		<maml:para>detailed description</maml:para>
+		<maml:para>This cmdlet will take a supplied Lenovo serial number and product number and perform a warranty lookup using a published Lenovo REST API.</maml:para>
+		<maml:para>This cmdlet can also take a computer name as a parameter that will in turn retrieve the serial number and model number using WMI before
+retrieving the warranty status.</maml:para>
 	</maml:description>
 	<command:syntax>
 		<command:syntaxItem>
@@ -22,14 +24,14 @@
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
 				<maml:name>ComputerName</maml:name>
 				<maml:description>
-					<maml:para />
+					<maml:para>The name of the computer that should be queried via WMI to retrieve its serial number for subsequent warranty lookup.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 				<maml:name>Credential</maml:name>
 				<maml:description>
-					<maml:para />
+					<maml:para>The credential object representing the credentials that should be used when performing a WMI query of a remote computer.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
 			</command:parameter>
@@ -39,23 +41,16 @@
 			<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
 				<maml:name>SerialNumber</maml:name>
 				<maml:description>
-					<maml:para />
+					<maml:para>The serial number of the Lenovo device that should be used for the query.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="1">
 				<maml:name>Product</maml:name>
 				<maml:description>
-					<maml:para />
+					<maml:para>The Lenovo product code that should be used in the warranty lookup.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-				<maml:name>Credential</maml:name>
-				<maml:description>
-					<maml:para />
-				</maml:description>
-				<command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -63,7 +58,7 @@
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
 			<maml:name>ComputerName</maml:name>
 			<maml:description>
-				<maml:para />
+				<maml:para>The name of the computer that should be queried via WMI to retrieve its serial number for subsequent warranty lookup.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -75,7 +70,7 @@
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>Credential</maml:name>
 			<maml:description>
-				<maml:para />
+				<maml:para>The credential object representing the credentials that should be used when performing a WMI query of a remote computer.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
 			<dev:type>
@@ -87,7 +82,7 @@
 		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="0">
 			<maml:name>SerialNumber</maml:name>
 			<maml:description>
-				<maml:para />
+				<maml:para>The serial number of the Lenovo device that should be used for the query.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -99,7 +94,7 @@
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="1">
 			<maml:name>Product</maml:name>
 			<maml:description>
-				<maml:para />
+				<maml:para>The Lenovo product code that should be used in the warranty lookup.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -138,10 +133,69 @@
 	<maml:alertSet>
 		<maml:title></maml:title>
 		<maml:alert>
-			<maml:para>notes</maml:para>
+			<maml:para>This cmdlet uses a REST API that was found in a Lenovo Support Forum discussion.</maml:para>
 		</maml:alert>
 	</maml:alertSet>
 	<command:examples>
+		<command:example>
+			<maml:title>--------------------------  Perform query on local machine  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>Get-LenovoWarrantyInfo</dev:code>
+			<dev:remarks>
+				<maml:para>This command will query the local machine using WMI to retrieve its serial number and then query the Lenovo service to retrieve warranty information</maml:para>
+				<maml:para />
+				<maml:para />
+				<maml:para>Get-LenovoWarrantyInfo
+
+WarrantyEndDate   : 2017-08-04
+ShipDate                 : 2014-07-23
+Type                        : 20C0
+SerialNumber         : MP05SKGB
+WarrantyStartDate : 2014-08-05
+Model                     : S05200
+Product                  : 20C0S05200</maml:para>
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>--------------------------  Lookup warranty information of remote computer  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>
+$cred = Get-Credential
+Get-LenovoWarrantyInfo -ComputerName yoga1 -Credential $cred </dev:code>
+			<dev:remarks>
+				<maml:para>The first line creates a credential object to be used when connecting to remote computer using WMI</maml:para>
+				<maml:para>The second line will result in a WMI query to the computer named yoga1 using the supplied credential. 
+The WMI query will return the devices serial number and model information to supply or the warranty lookup.</maml:para>
+				<maml:para />
+				<maml:para />
+				<maml:para>
+WarrantyEndDate  : 2017-08-04
+ShipDate                : 2014-07-23
+Type                       : 20C0
+SerialNumber         : MP05SKEZ
+WarrantyStartDate : 2014-08-05
+Model                     : S05200
+Product                  : 20C0S05200</maml:para>
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
 	</command:examples>
 	<maml:relatedLinks>
 	</maml:relatedLinks>

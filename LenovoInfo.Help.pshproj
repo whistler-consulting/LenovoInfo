@@ -12,12 +12,15 @@
       <Name>Get-LenovoWarrantyInfo</Name>
       <Syntax>
         <string>Get-LenovoWarrantyInfo [[-ComputerName] &lt;String&gt;] [-Credential &lt;Object&gt;]</string>
-        <string>Get-LenovoWarrantyInfo [-SerialNumber] &lt;String&gt; [[-Product] &lt;String&gt;] [-Credential &lt;Object&gt;]</string>
+        <string>Get-LenovoWarrantyInfo [-SerialNumber] &lt;String&gt; [[-Product] &lt;String&gt;]</string>
       </Syntax>
       <GeneralHelp>
-        <Synopsis>test synopsis</Synopsis>
-        <Description>detailed description</Description>
-        <Notes>notes</Notes>
+        <Synopsis>This cmdlet is designed to retrieve the warranty information for Lenovo devices.</Synopsis>
+        <Description>This cmdlet will take a supplied Lenovo serial number and product number and perform a warranty lookup using a published Lenovo REST API.
+
+This cmdlet can also take a computer name as a parameter that will in turn retrieve the serial number and model number using WMI before
+retrieving the warranty status.</Description>
+        <Notes>This cmdlet uses a REST API that was found in a Lenovo Support Forum discussion.</Notes>
         <InputType />
         <InputUrl />
         <InputTypeDescription />
@@ -27,32 +30,31 @@
       </GeneralHelp>
       <ParamSets>
         <CommandParameterSetInfo2 Name="ByComputerName" Params="ComputerName Credential Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="BySerialNumber" Params="SerialNumber Product Credential Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="BySerialNumber" Params="SerialNumber Product Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Parameters>
-        <ParameterDescription type="String" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="0" globbing="false" varLen="false">
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="0" globbing="false">
           <Name>ComputerName</Name>
-          <Description />
           <Attributes>
             <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
+          <Description>The name of the computer that should be queried via WMI to retrieve its serial number for subsequent warranty lookup.</Description>
           <DefaultValue />
         </ParameterDescription>
-        <ParameterDescription type="Object" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false" varLen="false">
+        <ParameterDescription type="Object" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>Credential</Name>
-          <Description />
           <Attributes>
             <string>System.Management.Automation.CredentialAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases />
+          <Description>The credential object representing the credentials that should be used when performing a WMI query of a remote computer.</Description>
           <DefaultValue />
         </ParameterDescription>
-        <ParameterDescription type="String" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="0" globbing="false" varLen="false">
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="0" globbing="false">
           <Name>SerialNumber</Name>
-          <Description />
           <Attributes>
             <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
@@ -61,20 +63,54 @@
           <Aliases>
             <string>SN</string>
           </Aliases>
+          <Description>The serial number of the Lenovo device that should be used for the query.</Description>
           <DefaultValue />
         </ParameterDescription>
-        <ParameterDescription type="String" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="1" globbing="false" varLen="false">
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="true" isPos="true" pos="1" globbing="false">
           <Name>Product</Name>
-          <Description />
           <Attributes>
             <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
+          <Description>The Lenovo product code that should be used in the warranty lookup.</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Perform query on local machine</Name>
+          <Cmd>Get-LenovoWarrantyInfo</Cmd>
+          <Description>This command will query the local machine using WMI to retrieve its serial number and then query the Lenovo service to retrieve warranty information</Description>
+          <Output>Get-LenovoWarrantyInfo
+
+WarrantyEndDate   : 2017-08-04
+ShipDate                 : 2014-07-23
+Type                        : 20C0
+SerialNumber         : MP05SKGB
+WarrantyStartDate : 2014-08-05
+Model                     : S05200
+Product                  : 20C0S05200</Output>
+        </Example>
+        <Example>
+          <Name>Lookup warranty information of remote computer</Name>
+          <Cmd>
+$cred = Get-Credential
+Get-LenovoWarrantyInfo -ComputerName yoga1 -Credential $cred </Cmd>
+          <Description>The first line creates a credential object to be used when connecting to remote computer using WMI
+
+The second line will result in a WMI query to the computer named yoga1 using the supplied credential. 
+The WMI query will return the devices serial number and model information to supply or the warranty lookup.</Description>
+          <Output>
+WarrantyEndDate  : 2017-08-04
+ShipDate                : 2014-07-23
+Type                       : 20C0
+SerialNumber         : MP05SKEZ
+WarrantyStartDate : 2014-08-05
+Model                     : S05200
+Product                  : 20C0S05200</Output>
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w10="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
