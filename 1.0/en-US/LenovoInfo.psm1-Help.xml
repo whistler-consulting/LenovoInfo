@@ -150,12 +150,12 @@ retrieving the warranty status.</maml:para>
 				<maml:para>Get-LenovoWarrantyInfo
 
 WarrantyEndDate   : 2017-08-04
-ShipDate                 : 2014-07-23
-Type                        : 20C0
-SerialNumber         : MP05SKGB
+ShipDate          : 2014-07-23
+Type              : 20C0
+SerialNumber      : MP05SKGB
 WarrantyStartDate : 2014-08-05
-Model                     : S05200
-Product                  : 20C0S05200</maml:para>
+Model             : S05200
+Product           : 20C0S05200</maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
@@ -180,13 +180,13 @@ The WMI query will return the devices serial number and model information to sup
 				<maml:para />
 				<maml:para />
 				<maml:para>
-WarrantyEndDate  : 2017-08-04
-ShipDate                : 2014-07-23
-Type                       : 20C0
-SerialNumber         : MP05SKEZ
+WarrantyEndDate   : 2017-08-04
+ShipDate          : 2014-07-23
+Type              : 20C0
+SerialNumber      : MP05SKEZ
 WarrantyStartDate : 2014-08-05
-Model                     : S05200
-Product                  : 20C0S05200</maml:para>
+Model             : S05200
+Product           : 20C0S05200</maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
